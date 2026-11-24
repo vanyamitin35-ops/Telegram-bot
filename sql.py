@@ -15,7 +15,7 @@ class Orders(Base):
     name = Column(String, nullable=False)
     price = Column(Integer, nullable=False) # Или Float, если цена может быть дробной
 
-    # Добавляем отношение к Confirmed_Orders
+    # Добавление отношений к Confirmed_Orders
     # Это позволит обращаться к подтвержденным заказам из объекта Orders
     # lazy='joined' загружает связанные объекты сразу
     confirmed_entry = relationship("Confirmed_Orders", back_populates="original_order", uselist=False)
@@ -31,7 +31,7 @@ class Confirmed_Orders(Base):
     name = Column(String, nullable=False)
     
     # Confirmed_Orders ссылается на конкретный подтвержденный заказ
-    # из таблицы Orders через его primary_key (Orders.id).
+    # из таблицы Orders через его primary_key.
     # user_id и price в Confirmed_Orders теперь будут просто копиями значений
     # из оригинального заказа, или могут быть получены через relationship.
     

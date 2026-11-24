@@ -3,7 +3,6 @@ import logging
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.enums import ParseMode
-# Импортируем DefaultBotProperties из aiogram.client.default
 from aiogram.client.default import DefaultBotProperties
 from handlers import router
 import config

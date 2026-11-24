@@ -112,9 +112,9 @@ async def call_back_cmd(call: CallbackQuery):
     
 @router.callback_query(F.data == "tires")
 async def call_tires(call: CallbackQuery):
-    db_session = None # Инициализируем db_session как None на случай, если возникнет ошибка до его получения
+    db_session = None # Инициализация db_session как None на случай, если возникнет ошибка до его получения
     try:
-        # Мы используем next() для получения сессии, а затем явно закрываем ее в finally.
+        # использования next() для получения сессии, а затем явно закрываем ее в finally.
         db_session = next(sql.get_db())
         
         new_orders2 = sql.Orders(
@@ -132,14 +132,14 @@ async def call_tires(call: CallbackQuery):
         await call.answer() 
         
     except sql.SQLAlchemyError as e: 
-        # Откатываем транзакцию в случае ошибки базы данных
+        # Откат транзакции в случае ошибки базы данных
         if db_session:
             db_session.rollback()
         print(f"Произошла ошибка базы данных при добавлении заказа: {e}")
         await call.message.answer("❌ Произошла ошибка при добавлении товара в корзину.")
         await call.answer("Произошла ошибка при работе с базой данных.", show_alert=True)
     except Exception as e:
-        # Откатываем транзакцию в случае любой другой ошибки (если db_session уже была получена)
+        # Откат транзакции в случае любой другой ошибки (если db_session уже была получена)
         if db_session:
             db_session.rollback()
         print(f"Произошла непредвиденная ошибка: {e}")
@@ -152,9 +152,9 @@ async def call_tires(call: CallbackQuery):
         
 @router.callback_query(F.data == "disks")
 async def call_disks(call: CallbackQuery):
-    db_session = None # Инициализируем db_session как None на случай, если возникнет ошибка до его получения
+    db_session = None # Инициализация db_session как None на случай, если возникнет ошибка до его получения
     try:
-        # Мы используем next() для получения сессии, а затем явно закрываем ее в finally.
+        # использования next() для получения сессии, а затем явно закрытие ее в finally.
         db_session = next(sql.get_db())
         
         new_orders2 = sql.Orders(
@@ -172,14 +172,14 @@ async def call_disks(call: CallbackQuery):
         await call.answer() 
         
     except sql.SQLAlchemyError as e: 
-        # Откатываем транзакцию в случае ошибки базы данных
+        # Откат транзакции в случае ошибки базы данных
         if db_session:
             db_session.rollback()
         print(f"Произошла ошибка базы данных при добавлении заказа: {e}")
         await call.message.answer("❌ Произошла ошибка при добавлении товара в корзину.")
         await call.answer("Произошла ошибка при работе с базой данных.", show_alert=True)
     except Exception as e:
-        # Откатываем транзакцию в случае любой другой ошибки (если db_session уже была получена)
+        # Откат транзакции в случае любой другой ошибки (если db_session уже была получена)
         if db_session:
             db_session.rollback()
         print(f"Произошла непредвиденная ошибка: {e}")
@@ -193,7 +193,7 @@ async def call_disks(call: CallbackQuery):
         
 @router.callback_query(F.data == "window")
 async def call_window(call: CallbackQuery):
-    db_session = None # Инициализируем db_session как None на случай, если возникнет ошибка до его получения
+    db_session = None # Инициализация db_session как None на случай, если возникнет ошибка до его получения
     try:
         db_session = next(sql.get_db())
         
@@ -221,7 +221,7 @@ async def call_window(call: CallbackQuery):
         await call.message.answer("❌ Произошла ошибка при добавлении товара в корзину.")
         await call.answer("Произошла ошибка при работе с базой данных.", show_alert=True)
     except Exception as e:
-        # Откатываем транзакцию в случае любой другой ошибки (если db_session уже была получена)
+        # Откат транзакции в случае любой другой ошибки (если db_session уже была получена)
         if db_session:
             db_session.rollback()
         print(f"Произошла непредвиденная ошибка: {e}")
@@ -320,7 +320,7 @@ async def confirm_cmd(message: Message):
             await message.answer("🛒 Ваша корзина пуста. Добавьте товары перед подтверждением заказа.")
             return
 
-        # Подготавливаем товары для инвойса
+        # Подготовка товара для инвойса
         prices = []
         total_amount_kopecks = 0 # Сумма в копейках (или центах)
         order_description_items = []
@@ -335,7 +335,7 @@ async def confirm_cmd(message: Message):
         
         
         
-        # Отправляем инвойс
+        # Отправление инвойс
         # payload можно использовать для привязки платежа к конкретному пользователю или заказу
         await message.bot.send_invoice(
             chat_id=message.chat.id,
@@ -393,7 +393,7 @@ async def process_successful_payment(message: Message):
             print(f"Ошибка: Платеж для {user_id} прошел, но заказов в корзине не найдено.")
             return
 
-        # Перемещаем товары из Orders в Confirmed_Orders
+        # Перемещение товары из Orders в Confirmed_Orders
         for order in user_orders_in_cart:
             new_confirmed_order = sql.Confirmed_Orders(
                 order_id=order.id, # Ссылка на оригинальный ID заказа
@@ -403,7 +403,7 @@ async def process_successful_payment(message: Message):
                 time=datetime.utcnow() # Время подтверждения
             )
             db_session.add(new_confirmed_order)
-            # Удаляем оригинальный заказ из корзины
+            # Удаление оригиналього заказа из корзины
             db_session.delete(order)
             
         db_session.commit()
